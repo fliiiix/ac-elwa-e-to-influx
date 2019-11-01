@@ -1,7 +1,7 @@
 AC ELWA-E to influx
 ==================
 
-Replace this config in `__main__.py` with the right values.
+Replace this config in `__main__.py` with the correct values.
 
 ```
 BOILER = {
