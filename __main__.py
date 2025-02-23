@@ -1,8 +1,8 @@
 import requests
-import xml.etree.ElementTree as ET
+import json
 
 BOILER = {
-    "url": "http://hostname/data.xml",
+    "url": "http://hostname/data.jsn",
     "name": "lename":
 }
 
@@ -13,27 +13,23 @@ INFLUX = {
 }
 
 response = requests.get(BOILER["url"])
-root = ET.fromstring(response.text)
-device = root.find("DeviceStatus")
+device = json.loads(response.text)
 
-status = device.find("Status").text
-power = device.find("Power").text
-watertemp = int(device.find("Watertemp").text) / 10
-boostpower = device.find("Boostpower").text
-boostactive = device.find("Boostactive").text
+status = 1
+power = device["power_elwa2"]
+watertemp = int(device["temp1"]) / 10
 
-data = "boiler,name={} status={}i,power={}i,watertemp={},boostpower={}i,boostactive={}i".format(
+data = "boiler,name={} status={}i,power={}i,watertemp={}".format(
     BOILER["name"],
     status,
     power,
     watertemp,
-    boostpower,
-    boostactive
 )
 
 r = requests.post(INFLUX["url"], data=data, auth=(INFLUX["username"], INFLUX["password"]))
 
 print(data)
+print(r.status_code)
 print(r.text)
 
 """
